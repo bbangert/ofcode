@@ -1,0 +1,17 @@
+Traceback
+---------
+
+- Crawl all the objects.inv files for the various Python Sphinx documented projects so that we can link to module API docs from the actual module reported on the traceback when possible.
+  - Probably get the most common projects people use first, keep an index around of all the modules we have, also keep the version the link goes to. This way when we get library data, we can even link to the right version of the module docs.
+- Add API docs for posting a traceback
+- Crawl all the packages listed in cheeseshop.python.org to pull out the package names, and keep up on what the latest version of the package is. This way we can indicate on a traceback page when a posted library is out of date with the latest.
+
+
+Pastebin
+--------
+
+- Add JSON / XMLRPC API like Lodge It
+- Add per-line comments
+- Add password feature
+- Add sticky feature to stick a paste longer
+- Ability to click a line number for an anchor (ie, to jump to and highlight the line)

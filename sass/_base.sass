@@ -1,0 +1,64 @@
+=ofcode_large_logo
+  h1
+    :font-size 5em
+    :font-weight bold
+
+
+=footer
+  :text-align center
+  :margin 0 auto
+
+
+=common-styles
+  +container
+  a
+    +hover-link
+  
+  form > .error
+    :border 1px solid red
+  
+  div.error-message
+    +error-msg
+  
+  header
+    +ofcode_large_logo
+
+  footer
+    :color #444
+    
+    a
+      :color #444
+    a:hover
+      :color #222
+      
+    nav
+      :margin-top 2em
+      +prepend(8)
+      +column(4)
+      :margin-bottom 15px
+      
+      ul
+        +horizontal-list
+    
+    div
+      :margin-top 2em
+      +column(4, True)
+      :text-align right
+
+=border-shadow($distance: 1px)
+  :-webkit-box-shadow $distance $distance $distance "#999"
+  :-moz-box-shadow $distance $distance $distance "#999"
+	
+
+=text-shadow($offset: 1px)
+  :text-shadow "#999" $offset $offset $offset
+
+=code-font
+  :font-family AnonymousProRegular, Lucida Console, Monaco, monospace
+
+=error-msg
+  :color red
+  :background url(/images/error.png) no-repeat left top
+  :padding 0 0 0 25px
+  :height 22px
+  :font-weight bold

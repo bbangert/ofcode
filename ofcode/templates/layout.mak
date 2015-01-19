@@ -30,7 +30,7 @@
                 ##     <li><a href="${url('ofcode_tmpl', request, action='contact')}">Contact</a></li>
                 </ul>
             </nav>
-            <div>&copy; 2012 ofCode.org</div>
+            <div>&copy; 2015 ofCode.org</div>
         </footer>
     </div>
     ${self.javascript()}

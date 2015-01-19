@@ -23,7 +23,7 @@ PasteDeploy*
 PasteScript*
 Paste*
 bin/
-lib/
+./lib/
 include/
 .ropeproject/
 man/

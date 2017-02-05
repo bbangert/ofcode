@@ -1,6 +1,6 @@
 <div id="editor"></div>
 
-<%form:form name="new_paste" url="/">
+<%form:form name="new_paste" url="">
     <%form:textarea name="code"/>
     <div class="language">
         <label for="language">Language:</label>

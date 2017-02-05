@@ -6,7 +6,7 @@
     <!--[if IE]>
         <script src="${base_js_url}/html5.js"></script>
     <![endif]-->
-    <link rel="icon" type="image/png" href="http://assets2.ofcode.org/images/paste_favicon.png">
+    <link rel="icon" type="image/png" href="${base_static_url}/images/paste_favicon.png">
     <link href="${base_css_url}/print.4.css" media="print" rel="stylesheet" type="text/css" />
     ${self.styles()}
     <!--[if lt IE 8]>
@@ -30,7 +30,7 @@
                 ##     <li><a href="${url('ofcode_tmpl', request, action='contact')}">Contact</a></li>
                 </ul>
             </nav>
-            <div>&copy; 2015 ofCode.org</div>
+            <div>&copy; 2017 ofCode.org</div>
         </footer>
     </div>
     ${self.javascript()}
@@ -40,7 +40,7 @@
 <%def name="header()">
     <header>
        <hgroup>
-           <a href="/"><h1>Paste<br /><span>Of Code</span></h1></a>
+           <a href="${request.application_url}"><h1>Paste<br /><span>Of Code</span></h1></a>
        </hgroup>
     </header>
 </%def>
@@ -55,7 +55,7 @@
             stylesheet_files = ['/static/stylesheets/%s.css' % f for f in stylesheets.split()]
     %>
     % if c.use_minified_assets:
-        ${h.stylesheet_link('http://assets2.ofcode.org/stylesheets/%s' % request.registry.settings['ofcode.minified_css'])}
+        ${h.stylesheet_link('https://assets1.ofcode.org/stylesheets/%s' % request.registry.settings['ofcode.minified_css'])}
     % else:
         ${ h.stylesheet_link(*stylesheet_files) }
     %endif
@@ -81,7 +81,7 @@
             javascript_files = ['/static/javascripts/%s.js' % f for f in javascripts]
     %>
     % if c.use_minified_assets:
-        ${ h.javascript_link('http://assets1.ofcode.org/javascripts/%s' % request.registry.settings['ofcode.minified_js'])}
+        ${ h.javascript_link('https://assets1.ofcode.org/javascripts/%s' % request.registry.settings['ofcode.minified_js'])}
     % else:
         ${ h.javascript_link(*javascript_files) }
     % endif

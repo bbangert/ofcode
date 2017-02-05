@@ -5,5 +5,5 @@
 @font-face {
 	font-family: 'BitstreamVeraSansRoman';
 	src: url('/fonts/Vera.eot');
-	src: local('Bitstream Vera Sans'), local('BitstreamVeraSans-Roman'), url('http://assets1.ofcode.org/fonts/Vera.woff') format('woff'), url('http://assets1.ofcode.org/fonts/Vera.ttf') format('truetype'), url('http://assets1.ofcode.org/fonts/Vera.svg#BitstreamVeraSans-Roman') format('svg');
+	src: local('Bitstream Vera Sans'), local('BitstreamVeraSans-Roman'), url('https://assets1.ofcode.org/fonts/Vera.woff') format('woff'), url('https://assets1.ofcode.org/fonts/Vera.ttf') format('truetype'), url('https://assets1.ofcode.org/fonts/Vera.svg#BitstreamVeraSans-Roman') format('svg');
 }

@@ -24,9 +24,10 @@ def add_renderer_globals(event):
         else:
             val = bool(val)
         tmpl_context.use_minified_assets = val
+        globs["base_static_url"] = 'https://assets1.ofcode.org'
         if val:
-            globs['base_js_url'] = 'http://assets1.ofcode.org/javascripts'
-            globs['base_css_url'] = 'http://assets2.ofcode.org/stylesheets'
+            globs['base_js_url'] = 'https://assets1.ofcode.org/javascripts'
+            globs['base_css_url'] = 'https://assets1.ofcode.org/stylesheets'
         else:
             globs['base_js_url'] = '/static/javascripts'
             globs['base_css_url'] = '/static/stylesheets'

@@ -112,6 +112,7 @@ class Paste(object):
 
 
 class Root(object):
+    __name__ = ""
     __acl__ = [
         (Allow, Everyone, 'create')
     ]

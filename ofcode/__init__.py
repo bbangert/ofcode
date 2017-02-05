@@ -1,7 +1,9 @@
+import os
+import uuid
+
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
-from pyramid.session import UnencryptedCookieSessionFactoryConfig
-
+from pyramid.session import SignedCookieSessionFactory
 
 def main(global_config, **settings):
     from ofcode.models import Paste
@@ -11,11 +13,25 @@ def main(global_config, **settings):
     authentication_policy = OfcodeAuthenticationPolicy()
     authorization_policy = ACLAuthorizationPolicy()
 
-    session_factory = UnencryptedCookieSessionFactoryConfig(
-        secret="enrN7Khdk7BaZF",
-        cookie_name="ofcode",
-        cookie_max_age=5 * 365 * 24 * 60 * 60,
+    if "COOKIE_SECRET" in os.environ:
+        cookie_secret = os.environ["COOKIE_SECRET"]
+    else:
+        cookie_secret = str(uuid.uuid4())
+
+    session_factory = SignedCookieSessionFactory(
+        secret=cookie_secret,
+        max_age=5 * 365 * 24 * 60 * 60,
+        timeout=None
     )
+
+    # Pull out env vars if present
+    if "REDIS_HOST" in os.environ:
+        settings["redis.host"] = os.environ["REDIS_HOST"]
+    if "REDIS_PORT" in os.environ:
+        settings["redis.port"] = os.environ["REDIS_PORT"]
+    if "REDIS_DB" in os.environ:
+        settings["redis.db"] = os.environ["REDIS_DB"]
+
     Paste.settings = settings
     Paste.redis = redis_connect()
     config = Configurator(root_factory=Root,
@@ -24,6 +40,7 @@ def main(global_config, **settings):
                           authentication_policy=authentication_policy,
                           authorization_policy=authorization_policy
                           )
+    config.include('pyramid_mako')
     config.add_subscriber('ofcode.subscribers.add_renderer_globals',
                           'pyramid.events.BeforeRender')
     config.add_subscriber('ofcode.subscribers.setup_tmpl_context',
@@ -60,3 +77,12 @@ def main(global_config, **settings):
     config.add_view('.views.font_toggle', name='font_toggle',
                     context='.models.Root', renderer='json')
     return config.make_wsgi_app()
+
+
+zappa = main({}, **{
+    "pyramid.debug_authorization": True,
+    "mako.directories": "ofcode:templates",
+    "ofcode.minified_js": "ofcode-03222012.2-min.js",
+    "ofcode.minified_css": "ofcode-012917.1-min.css",
+    "use_minified_assets": True
+})

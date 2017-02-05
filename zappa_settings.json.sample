@@ -1,0 +1,47 @@
+{
+    "dev": {
+        "project_name": "PasteOfCode",
+        "manage_roles": false,
+        "environment_variables": {
+            "REDIS_HOST": "ELASTICACHE_NAME_HERE",
+            "COOKIE_SECRET": "SECRET_HERE"
+        },
+        "role_name": "ROLE_HERE",
+        "app_function": "ofcode.zappa",
+        "s3_bucket": "AN_S3_BUCKET",
+        "memory_size": 128,
+        "use_precompiled_packages": true,
+        "vpc_config": {
+            "SubnetIds": [
+                "SUBNET_HERE",
+            ],
+            "SecurityGroupIds": [
+                "GROUPID_HERE"
+            ]
+        }
+    },
+    "prod": {
+        "project_name": "PasteOfCode",
+        "domain": "paste.ofcode.org",
+        "lets_encrypt_key": "account.key",
+        "manage_roles": false,
+        "environment_variables": {
+            "REDIS_HOST": "ELASTICACHE_NAME_HERE",
+            "COOKIE_SECRET": "SECRET_HERE"
+        },
+        "role_name": "ROLE_HERE",
+        "app_function": "ofcode.zappa",
+        "s3_bucket": "AN_S3_BUCKET",
+        "memory_size": 128,
+        "keep_warm_expression": "rate(1 minute)",
+        "use_precompiled_packages": true,
+        "vpc_config": {
+            "SubnetIds": [
+                "SUBNET_HERE",
+            ],
+            "SecurityGroupIds": [
+                "GROUPID_HERE"
+            ]
+        }
+    }
+}

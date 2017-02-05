@@ -23,7 +23,7 @@ def create(req):
         req.session['id'] = str(uuid.uuid4())
     key = Paste.create(session_id=req.session['id'], **req.form_result)
     req.session.changed()
-    return HTTPFound(location=('/%s' % key))
+    return HTTPFound(location=('%s' % key))
 
 
 def show(context, req):

@@ -18,8 +18,8 @@
         ${self.header()}
         ${next.body()}
         <div id="toggles">
-            Toggle: 
-            <a id="toggle_theme" href="#">theme</a>, 
+            Toggle:
+            <a id="toggle_theme" href="#">theme</a>,
             <a id="toggle_font" href="#">font</a>
         </div>
         <footer>
@@ -30,7 +30,7 @@
                 ##     <li><a href="${url('ofcode_tmpl', request, action='contact')}">Contact</a></li>
                 </ul>
             </nav>
-            <div>&copy; 2017 ofCode.org</div>
+            <div>&copy; 2020 ofCode.org</div>
         </footer>
     </div>
     ${self.javascript()}

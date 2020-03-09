@@ -22,7 +22,7 @@ pyramid==1.8.1
 pyramid-mako==1.0.2
 python-dateutil==2.6.0
 python-slugify==1.2.1
-PyYAML==3.12
+PyYAML==5.1
 redis==2.10.5
 repoze.lru==0.6
 requests==2.13.0

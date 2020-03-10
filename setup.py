@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ofcode',
-    version='0.3',
+    version='0.4',
     description='paste.ofcode.org site',
     author='',
     author_email='',

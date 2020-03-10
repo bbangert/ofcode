@@ -25,7 +25,7 @@ python-slugify==1.2.1
 PyYAML==5.1
 redis==2.10.5
 repoze.lru==0.6
-requests==2.13.0
+requests==2.20.0
 s3transfer==0.1.10
 simplejson==3.10.0
 six==1.10.0

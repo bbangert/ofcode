@@ -8,7 +8,6 @@ use actix_web::{
     web::Data,
     App, HttpResponse, HttpServer, Responder, Result,
 };
-use base64;
 use derive_more::{Display, Error};
 use mobc::Pool;
 use mobc_redis::redis::{AsyncCommands, FromRedisValue};
@@ -110,7 +109,7 @@ async fn create_code(
         .map_err(error::ErrorInternalServerError)?
         .unwrap_or_else(|| {
             let id = nanoid!();
-            session.insert("id", id.clone()).unwrap();
+            session.insert("id", &id).unwrap();
             id
         });
     let code_storage = CodeStorage {
@@ -119,7 +118,7 @@ async fn create_code(
         session_id,
     };
     let mut con = pool.get().await.map_err(error::ErrorInternalServerError)?;
-    con.set(key.clone(), serde_json::to_string(&code_storage).unwrap())
+    con.set(&key, serde_json::to_string(&code_storage).unwrap())
         .await
         .map_err(error::ErrorInternalServerError)?;
     Ok(web::Json(CodeId { id: key }))
@@ -136,7 +135,7 @@ async fn delete_code(
         .map_err(error::ErrorInternalServerError)?
         .unwrap_or_else(|| {
             let id = nanoid!();
-            session.insert("id", id.clone()).unwrap();
+            session.insert("id", &id).unwrap();
             id
         });
     let mut con = pool.get().await.map_err(error::ErrorInternalServerError)?;

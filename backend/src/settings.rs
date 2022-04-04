@@ -1,8 +1,6 @@
 use actix_web::cookie;
-use base64;
 use config::{Config, ConfigError, Environment};
 use serde::{Deserialize, Serialize};
-use std::env;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Settings {
@@ -18,8 +16,6 @@ pub struct Settings {
 
 impl Settings {
     pub fn new() -> Result<Self, ConfigError> {
-        let run_mode = env::var("RUN_MODE").unwrap_or_else(|_| "development".into());
-
         let default_key = cookie::Key::generate();
 
         let s = Config::builder()

@@ -60,7 +60,7 @@ struct CodeId {
 }
 
 #[derive(Debug, Display, Error)]
-enum UserError {
+enum PasteError {
     #[display(fmt = "Code not found.")]
     CodeNotFound,
 
@@ -68,7 +68,7 @@ enum UserError {
     Unauthorized,
 }
 
-impl error::ResponseError for UserError {
+impl error::ResponseError for PasteError {
     fn error_response(&self) -> HttpResponse {
         HttpResponse::build(self.status_code())
             .insert_header(ContentType::html())
@@ -77,10 +77,19 @@ impl error::ResponseError for UserError {
 
     fn status_code(&self) -> StatusCode {
         match *self {
-            UserError::CodeNotFound => StatusCode::NOT_FOUND,
-            UserError::Unauthorized => StatusCode::UNAUTHORIZED,
+            PasteError::CodeNotFound => StatusCode::NOT_FOUND,
+            PasteError::Unauthorized => StatusCode::UNAUTHORIZED,
         }
     }
+}
+
+fn get_session_id(session: &Session) -> Result<String, error::Error> {
+    let session_id = session.get::<String>("id")?.unwrap_or_else(|| {
+        let id = nanoid!();
+        session.insert("id", &id).unwrap();
+        id
+    });
+    Ok(session_id)
 }
 
 #[get("/v1/code/{code_id}")]
@@ -92,7 +101,7 @@ async fn fetch_code(
     let stored_code: CodeStorage = con
         .get(code_id.into_inner())
         .await
-        .map_err(|_e| UserError::CodeNotFound)?;
+        .map_err(|_e| PasteError::CodeNotFound)?;
     let code: CodeBody = stored_code.into();
     Ok(web::Json(code))
 }
@@ -104,14 +113,7 @@ async fn create_code(
     session: Session,
 ) -> Result<impl Responder> {
     let key = nanoid!();
-    let session_id = session
-        .get::<String>("id")
-        .map_err(error::ErrorInternalServerError)?
-        .unwrap_or_else(|| {
-            let id = nanoid!();
-            session.insert("id", &id).unwrap();
-            id
-        });
+    let session_id = get_session_id(&session)?;
     let code_storage = CodeStorage {
         code: code.code.clone(),
         language: code.language.clone(),
@@ -130,19 +132,12 @@ async fn delete_code(
     code_id: web::Path<String>,
     session: Session,
 ) -> Result<impl Responder> {
-    let session_id = session
-        .get::<String>("id")
-        .map_err(error::ErrorInternalServerError)?
-        .unwrap_or_else(|| {
-            let id = nanoid!();
-            session.insert("id", &id).unwrap();
-            id
-        });
+    let session_id = get_session_id(&session)?;
     let mut con = pool.get().await.map_err(error::ErrorInternalServerError)?;
     let key = code_id.into_inner();
-    let stored_code: CodeStorage = con.get(&key).await.map_err(|_e| UserError::CodeNotFound)?;
+    let stored_code: CodeStorage = con.get(&key).await.map_err(|_e| PasteError::CodeNotFound)?;
     if stored_code.session_id != session_id {
-        return Err(UserError::Unauthorized.into());
+        return Err(PasteError::Unauthorized.into());
     }
     con.del(&key)
         .await

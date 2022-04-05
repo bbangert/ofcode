@@ -5,7 +5,7 @@ use actix_web::{
     cookie, delete, error, get,
     http::{header::ContentType, StatusCode},
     post, web,
-    web::Data,
+    web::{Data, JsonConfig, PayloadConfig},
     App, HttpResponse, HttpServer, Responder, Result,
 };
 use derive_more::{Display, Error};
@@ -172,6 +172,8 @@ async fn main() -> std::io::Result<()> {
                     .build(),
             )
             .app_data(Data::clone(&data))
+            .app_data(PayloadConfig::new(1024 * 1024 * 2))
+            .app_data(JsonConfig::default().limit(1024 * 1024 * 2))
             .service(fetch_code)
             .service(create_code)
             .service(delete_code)

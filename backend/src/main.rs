@@ -17,13 +17,13 @@ use serde::{Deserialize, Serialize};
 
 use settings::Settings;
 
-#[derive(Serialize, Deserialize, Default)]
+#[derive(Serialize, Deserialize)]
 struct CodeBody {
     code: String,
     language: String,
 }
 
-#[derive(Serialize, Deserialize, Default)]
+#[derive(Serialize, Deserialize)]
 struct CodeStorage {
     code: String,
     language: String,
@@ -54,7 +54,7 @@ impl From<CodeStorage> for CodeBody {
     }
 }
 
-#[derive(Serialize, Deserialize, Default)]
+#[derive(Serialize, Deserialize)]
 struct CodeId {
     id: String,
 }
@@ -92,12 +92,18 @@ fn get_session_id(session: &Session) -> Result<String, error::Error> {
     Ok(session_id)
 }
 
+async fn get_con(
+    pool: &Pool<RedisConnectionManager>,
+) -> Result<mobc::Connection<mobc_redis::RedisConnectionManager>, error::Error> {
+    pool.get().await.map_err(error::ErrorInternalServerError)
+}
+
 #[get("/v1/code/{code_id}")]
 async fn fetch_code(
     pool: Data<Pool<RedisConnectionManager>>,
     code_id: web::Path<String>,
 ) -> Result<impl Responder> {
-    let mut con = pool.get().await.map_err(error::ErrorInternalServerError)?;
+    let mut con = get_con(&pool).await?;
     let stored_code: CodeStorage = con
         .get(code_id.into_inner())
         .await
@@ -119,7 +125,7 @@ async fn create_code(
         language: code.language.clone(),
         session_id,
     };
-    let mut con = pool.get().await.map_err(error::ErrorInternalServerError)?;
+    let mut con = get_con(&pool).await?;
     con.set(&key, serde_json::to_string(&code_storage).unwrap())
         .await
         .map_err(error::ErrorInternalServerError)?;
@@ -133,7 +139,7 @@ async fn delete_code(
     session: Session,
 ) -> Result<impl Responder> {
     let session_id = get_session_id(&session)?;
-    let mut con = pool.get().await.map_err(error::ErrorInternalServerError)?;
+    let mut con = get_con(&pool).await?;
     let key = code_id.into_inner();
     let stored_code: CodeStorage = con.get(&key).await.map_err(|_e| PasteError::CodeNotFound)?;
     if stored_code.session_id != session_id {
